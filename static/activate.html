@@ -13,42 +13,49 @@ body {
     padding: 20px;
 }
 .card {
-    background: white; border-radius: 20px; padding: 40px 30px;
+    background: white; border-radius: 20px; padding: 32px 28px;
     max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    text-align: center;
 }
-.icon { font-size: 48px; margin-bottom: 10px; }
-h1 { font-size: 24px; color: #333; margin-bottom: 6px; }
-.sub { color: #888; font-size: 14px; margin-bottom: 30px; }
-.input-group { margin-bottom: 20px; text-align: left; }
-.input-group label { display: block; font-size: 14px; color: #555; margin-bottom: 6px; font-weight: 500; }
+.icon { font-size: 40px; text-align: center; margin-bottom: 4px; }
+h1 { text-align: center; font-size: 22px; color: #333; margin-bottom: 4px; }
+.sub { text-align: center; color: #888; font-size: 13px; margin-bottom: 20px; }
+
+/* QR Section */
+.qr-section {
+    text-align: center; background: #fdf6f0; border: 1px solid #f0c8a0;
+    border-radius: 12px; padding: 16px; margin-bottom: 20px;
+}
+.qr-section .qr-title { color: #e65100; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.qr-section img { width: 140px; height: 140px; border-radius: 8px; border: 2px solid #fff; }
+.qr-section .qr-steps { color: #666; font-size: 12px; margin-top: 8px; line-height: 1.8; text-align: left; padding-left: 8px; }
+
+.input-group { margin-bottom: 16px; }
+.input-group label { display: block; font-size: 13px; color: #555; margin-bottom: 4px; font-weight: 500; }
 .input-group input {
-    width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 12px;
-    font-size: 16px; transition: border-color 0.2s; outline: none;
+    width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 10px;
+    font-size: 15px; transition: border-color 0.2s; outline: none;
 }
 .input-group input:focus { border-color: #667eea; }
 .btn {
-    width: 100%; padding: 14px; border: none; border-radius: 12px;
-    font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;
-    margin-bottom: 12px;
+    width: 100%; padding: 12px; border: none; border-radius: 10px;
+    font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    margin-bottom: 10px;
 }
-.btn-primary { background: #667eea; color: white; }
-.btn-primary:hover { background: #5a6fd6; }
+.btn-primary { background: #533483; color: white; }
+.btn-primary:hover { background: #6b3fa0; }
 .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
-.btn-success { background: #4caf50; color: white; }
-.btn-success:hover { background: #43a047; }
 .result-box {
-    margin-top: 20px; padding: 20px; border-radius: 12px; display: none;
+    margin-top: 16px; padding: 16px; border-radius: 10px; display: none;
 }
 .result-box.success { background: #e8f5e9; border: 1px solid #a5d6a7; display: block; }
 .result-box.error { background: #ffebee; border: 1px solid #ef9a9a; display: block; color: #c62828; }
 .code-display {
-    font-size: 28px; font-weight: 700; letter-spacing: 2px; color: #2e7d32;
-    font-family: "Courier New", monospace; margin: 10px 0;
+    font-size: 26px; font-weight: 700; letter-spacing: 2px; color: #2e7d32;
+    font-family: "Courier New", monospace; margin: 8px 0;
 }
-.expires { color: #666; font-size: 13px; margin-top: 6px; }
-.reminder { color: #888; font-size: 12px; margin-top: 30px; }
-.spinner { display: none; margin: 10px auto; width: 24px; height: 24px; border: 3px solid #e0e0e0; border-top-color: #667eea; border-radius: 50%; animation: spin 0.8s linear infinite; }
+.expires { color: #666; font-size: 12px; margin-top: 4px; }
+.reminder { text-align: center; color: #aaa; font-size: 11px; margin-top: 16px; }
+.spinner { display: none; margin: 10px auto; width: 22px; height: 22px; border: 3px solid #e0e0e0; border-top-color: #533483; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
@@ -56,11 +63,23 @@ h1 { font-size: 24px; color: #333; margin-bottom: 6px; }
 <div class="card">
     <div class="icon">🎬</div>
     <h1>AI视频创作工具</h1>
-    <p class="sub">输入手机号，免费获取激活码<br>有效期1年</p>
+    <p class="sub">免费激活，畅享AI视频创作</p>
+
+    <!-- QR Code -->
+    <div class="qr-section">
+        <div class="qr-title">📌 扫码加微信群</div>
+        <img src="/assets/qr_code.png" alt="微信群二维码" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div style="display:none;color:#aaa;font-size:12px">二维码加载中...</div>
+        <div class="qr-steps">
+            ① 扫码加入微信群<br>
+            ② 群内置顶消息有激活链接<br>
+            ③ 回到此页面获取激活码
+        </div>
+    </div>
 
     <div class="input-group">
         <label>📱 手机号码</label>
-        <input type="tel" id="phone" placeholder="请输入11位手机号" maxlength="11" pattern="[0-9]{11}">
+        <input type="tel" id="phone" placeholder="请输入11位手机号" maxlength="11">
     </div>
 
     <button class="btn btn-primary" id="getCodeBtn" onclick="getCode()">获取免费激活码</button>
@@ -70,7 +89,7 @@ h1 { font-size: 24px; color: #333; margin-bottom: 6px; }
         <div id="resultContent"></div>
     </div>
 
-    <p class="reminder">请先加入微信群，再从群内打开此链接</p>
+    <p class="reminder">激活后有效期1年 | 到期可重新激活</p>
 </div>
 
 <script>
@@ -101,10 +120,9 @@ async function getCode() {
                 <p style="color:#2e7d32;font-weight:600;">✅ ${msgType}</p>
                 <div class="code-display">${data.code}</div>
                 <p class="expires">📅 到期日: ${data.expires_at}</p>
-                <p style="color:#666;font-size:13px;margin-top:12px;line-height:1.6;">
+                <p style="color:#666;font-size:12px;margin-top:10px;line-height:1.6;">
                     请在软件中输入以上激活码完成激活。<br>
-                    请妥善保管，不要泄露给他人。<br>
-                    到期后可重新领取。
+                    请妥善保管，不要泄露给他人。
                 </p>
             `, 'success');
         } else {
