@@ -60,7 +60,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
         <a href="/admin/vip-codes" class="active">VIP码管理/a>
         <a href="/admin/free-users">免费用户</a>
     </div>
-    <button onclick="logout()">閫€鍑虹櫥褰?/button>
+    <button onclick="logout()">閫€退出登录?/button>
 </nav>
 <div class="container">
     <div class="card">
@@ -78,12 +78,12 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
         <h3>馃搵 VIP码列/h3>
         <div class="toolbar">
             <select id="filterStatus" onchange="loadCodes(1)">
-                <option value="">全部状?/option>
+                <option value="">全部状态/option>
                 <option value="unused">鏈娇鐢?/option>
                 <option value="used">已使/option>
                 <option value="revoked">已撤</option>
             </select>
-            <input type="text" id="searchInput" placeholder="搜索VIP码或手机.." style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
+            <input type="text" id="searchInput" placeholder="搜索VIP码或手机号" style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
             <button onclick="loadCodes(1)">馃攳 搜索</button>
         </div>
         <div id="codeTable"><div class="spinner"></div></div>
@@ -175,7 +175,7 @@ async function generateCodes() {
 }
 
 async function revokeCode(vipCode) {
-    if (!confirm('纭鎾ら攢姝IP码？撤销后无法恢复?)) return;
+    if (!confirm('纭撤销VIP码IP码？撤销后无法恢复?)) return;
     try {
         const resp = await fetch('/admin/api/vip-revoke', {
             method: 'POST', headers: {'Content-Type':'application/json'},
@@ -189,7 +189,7 @@ async function revokeCode(vipCode) {
 
 function copyGenResult() {
     const text = document.getElementById('genResult').innerText;
-    navigator.clipboard.writeText(text).then(() => toast('已制到));
+    navigator.clipboard.writeText(text).then(() => toast('已复制到剪贴板));
 }
 
 async function exportCSV() {
