@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理后台 - VIP码管理</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; min-height: 100vh; }
+nav { background: #1a1a2e; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; color: white; }
+nav h2 { font-size: 18px; }
+nav .links { display: flex; gap: 24px; }
+nav .links a { color: #aaa; text-decoration: none; font-size: 14px; transition: color 0.2s; }
+nav .links a:hover, nav .links a.active { color: white; }
+nav button { background: #e74c3c; color: white; border: none; border-radius: 6px; padding: 6px 16px; cursor: pointer; font-size: 13px; }
+.container { max-width: 1200px; margin: 24px auto; padding: 0 24px; }
+.card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 16px; }
+.card h3 { font-size: 16px; color: #333; margin-bottom: 12px; }
+.toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+.toolbar input, .toolbar select, .toolbar button { padding: 8px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; }
+.toolbar input:focus, .toolbar select:focus { border-color: #533483; }
+.toolbar button { cursor: pointer; font-weight: 500; }
+.btn-primary { background: #533483; color: white; border-color: #533483; }
+.btn-primary:hover { background: #6b3fa0; }
+.btn-danger { background: #e74c3c; color: white; border-color: #e74c3c; }
+.btn-danger:hover { background: #c0392b; }
+.btn-outline { background: white; color: #333; }
+.btn-outline:hover { background: #f5f5f5; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 10px 12px; border-bottom: 2px solid #eee; color: #888; font-size: 13px; font-weight: 500; }
+td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; color: #444; }
+.code-cell { font-family: "Courier New", monospace; font-size: 13px; letter-spacing: 1px; }
+.badge { padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+.badge-unused { background: #e8f5e9; color: #2e7d32; }
+.badge-used { background: #e3f2fd; color: #1565c0; }
+.badge-revoked { background: #ffebee; color: #c62828; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+.modal.show { display: flex; }
+.modal-box { background: white; border-radius: 16px; padding: 32px; width: 440px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.modal-box h3 { margin-bottom: 16px; }
+.modal-box input, .modal-box textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; font-size: 14px; outline: none; }
+.modal-box textarea { height: 60px; resize: vertical; }
+.modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
+.toast { position: fixed; top: 20px; right: 20px; background: #333; color: white; padding: 12px 20px; border-radius: 8px; font-size: 14px; z-index: 200; opacity: 0; transition: opacity 0.3s; }
+.toast.show { opacity: 1; }
+.pagination { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
+.pagination button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-size: 13px; }
+.pagination button:disabled { opacity: 0.4; cursor: default; }
+.pagination button.active { background: #533483; color: white; border-color: #533483; }
+.spinner { width: 24px; height: 24px; border: 3px solid #e0e0e0; border-top-color: #1a1a2e; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 20px auto; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<nav>
+    <h2>⭐ VIP码管理</h2>
+    <div class="links">
+        <a href="/admin/dashboard">仪表盘</a>
+        <a href="/admin/vip-codes" class="active">VIP码管理</a>
+        <a href="/admin/free-users">免费用户</a>
+    </div>
+    <button onclick="logout()">退出登录</button>
+</nav>
+<div class="container">
+    <div class="card">
+        <h3>🔧 批量生成VIP码</h3>
+        <div class="toolbar">
+            <input type="number" id="genCount" value="10" min="1" max="500" style="width:80px">
+            <button class="btn-primary" onclick="generateCodes()">生成VIP码</button>
+            <input type="text" id="genNote" placeholder="备注（如：6月活动批次）" style="width:200px">
+            <button class="btn-outline" onclick="exportCSV()">📥 导出CSV</button>
+            <button class="btn-outline" onclick="backupDB()">💾 备份数据库</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📋 VIP码列表</h3>
+        <div class="toolbar">
+            <select id="filterStatus" onchange="loadCodes(1)">
+                <option value="">全部状态</option>
+                <option value="unused">未使用</option>
+                <option value="used">已使用</option>
+                <option value="revoked">已撤销</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="搜索VIP码或手机号..." style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
+            <button onclick="loadCodes(1)">🔍 搜索</button>
+        </div>
+        <div id="codeTable"><div class="spinner"></div></div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+</div>
+
+<div class="modal" id="genModal">
+    <div class="modal-box">
+        <h3>✅ 生成结果</h3>
+        <div id="genResult" style="max-height:400px;overflow-y:auto;font-family:monospace;font-size:13px;line-height:2;"></div>
+        <div class="modal-btns">
+            <button class="btn-outline" onclick="copyGenResult()">📋 一键复制</button>
+            <button class="btn-primary" onclick="document.getElementById('genModal').classList.remove('show');loadCodes(1)">关闭</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let currentPage = 1;
+const API = {};
+
+async function loadCodes(page) {
+    currentPage = page;
+    const status = document.getElementById('filterStatus').value;
+    const search = document.getElementById('searchInput').value.trim();
+    const params = new URLSearchParams({page, status, search});
+    
+    try {
+        const resp = await fetch('/admin/api/vip-codes?' + params);
+        if (resp.status===302||resp.redirected) { window.location.href='/admin'; return; }
+        const data = await resp.json();
+        renderTable(data);
+        renderPagination(data.total, data.per_page, data.page);
+    } catch(e) { document.getElementById('codeTable').innerHTML = '<p style="color:#c62828">加载失败</p>'; }
+}
+
+function renderTable(data) {
+    if (!data.items.length) {
+        document.getElementById('codeTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">暂无数据</p>';
+        return;
+    }
+    let rows = '';
+    data.items.forEach(r => {
+        const badge = r.status==='unused'?'badge-unused':r.status==='used'?'badge-used':'badge-revoked';
+        const label = r.status==='unused'?'未使用':r.status==='used'?'已使用':'已撤销';
+        const action = r.status==='unused'
+            ? `<button class="btn-danger" style="padding:4px 10px;font-size:12px" onclick="revokeCode('${r.vip_code}')">撤销</button>`
+            : '-';
+        rows += `<tr>
+            <td><span class="badge ${badge}">${label}</span></td>
+            <td class="code-cell">${r.vip_code}</td>
+            <td>${r.used_by_phone||'-'}</td>
+            <td>${r.generated_at}</td>
+            <td>${r.used_at||'-'}</td>
+            <td>${r.note||'-'}</td>
+            <td>${action}</td>
+        </tr>`;
+    });
+    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状态</th><th>VIP码</th><th>使用者</th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderPagination(total, perPage, page) {
+    const pages = Math.ceil(total / perPage);
+    if (pages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
+    let html = '';
+    for (let i = 1; i <= pages; i++) {
+        html += `<button class="${i===page?'active':''}" onclick="loadCodes(${i})" ${i===page?'disabled':''}>${i}</button>`;
+    }
+    document.getElementById('pagination').innerHTML = html;
+}
+
+async function generateCodes() {
+    const count = parseInt(document.getElementById('genCount').value) || 10;
+    const note = document.getElementById('genNote').value.trim();
+    try {
+        const resp = await fetch('/admin/api/vip-generate', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({count, note})
+        });
+        const data = await resp.json();
+        let html = `<p style="margin-bottom:10px">批次: ${data.batch_id} | 共 ${data.count} 个</p>`;
+        data.codes.forEach(c => { html += `<div>${c.vip_code}</div>`; });
+        document.getElementById('genResult').innerHTML = html;
+        document.getElementById('genModal').classList.add('show');
+    } catch(e) { toast('生成失败'); }
+}
+
+async function revokeCode(vipCode) {
+    if (!confirm('确认撤销此VIP码？撤销后无法恢复。')) return;
+    try {
+        const resp = await fetch('/admin/api/vip-revoke', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({vip_code: vipCode})
+        });
+        const data = await resp.json();
+        if (data.success) { toast('撤销成功'); loadCodes(currentPage); }
+        else { toast(data.error || '撤销失败', 'error'); }
+    } catch(e) { toast('操作失败'); }
+}
+
+function copyGenResult() {
+    const text = document.getElementById('genResult').innerText;
+    navigator.clipboard.writeText(text).then(() => toast('已复制到剪贴板'));
+}
+
+async function exportCSV() {
+    const resp = await fetch('/admin/api/export');
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'vip_codes.csv'; a.click();
+    URL.revokeObjectURL(url);
+}
+
+async function backupDB() {
+    const resp = await fetch('/admin/api/backup', {method:'POST'});
+    const data = await resp.json();
+    toast(data.success ? '数据库已备份: ' + data.path : '备份失败');
+}
+
+async function logout() { await fetch('/admin/api/logout',{method:'POST'}); window.location.href='/admin'; }
+
+function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+loadCodes(1);
+</script>
+</body>
+</html>
