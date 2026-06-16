@@ -32,23 +32,23 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; colo
 .pagination button.active { background: #533483; color: white; border-color: #533483; }
 .spinner { width: 24px; height: 24px; border: 3px solid #e0e0e0; border-top-color: #1a1a2e; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 20px auto; }
 @keyframes spin { to { transform: rotate(360deg); } }
-<</style>
-<</head>
+</style>
+</head>
 <body>
 <nav>
-    <h2>👤 免费用户<</h2>
+    <h2>👤 免费用户</h2>
     <div class="links">
         <a href="/admin/dashboard">浠〃鐩?</a>
         <a href="/admin/vip-codes">VIP码管理</a>
         <a href="/admin/free-users" class="active">免费用户</a>
     </div>
     <button onclick="logout()">退出登录?</button>
-<</nav>
+</nav>
 <div class="container">
     <div class="card">
         <h3>📅 用户列表</h3>
         <div class="toolbar" style="color:#888;font-size:13px">
-            总: <strong id="totalCount">-<</strong> 浜?        </div>
+            总: <strong id="totalCount">-</strong> 浜?        </div>
         <div id="userTable"><div class="spinner"></div></div>
         <div class="pagination" id="pagination"></div>
     </div>
@@ -73,7 +73,7 @@ async function loadUsers(page) {
         document.getElementById('totalCount').textContent = data.total;
         
         if (!data.items.length) {
-            document.getElementById('userTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">暂无用户<</p>';
+            document.getElementById('userTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">暂无用户</p>';
             return;
         }
         let rows = '';
@@ -86,9 +86,9 @@ async function loadUsers(page) {
                 <td>${r.expires_at}</td>
                 <td>${getExpBadge(r.expire_status)}</td>
                 <td>${r.upgraded_at||'-'}</td>
-            <</tr>`;
+            </tr>`;
         });
-        document.getElementById('userTable').innerHTML = `<table><thead><tr><th>手机</th><th>激活码</th><th>等级</th><th>婵€激活时间?</th><th>到期</th><th>状?</th><th>升级时间</th><</tr><</thead><tbody>${rows}<</tbody><</table>`;
+        document.getElementById('userTable').innerHTML = `<table><thead><tr><th>手机</th><th>激活码</th><th>等级</th><th>婵€激活时间?</th><th>到期</th><th>状?</th><th>升级时间</th></tr></thead><tbody>${rows}</tbody></table>`;
         
         const pages = Math.ceil(data.total / data.per_page);
         if (pages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
@@ -97,11 +97,11 @@ async function loadUsers(page) {
             ph += `<button class="${i===page?'active':''}" onclick="loadUsers(${i})" ${i===page?'disabled':''}>${i}</button>`;
         }
         document.getElementById('pagination').innerHTML = ph;
-    } catch(e) { document.getElementById('userTable').innerHTML = '<p style="color:#c62828">加载失败<</p>'; }
+    } catch(e) { document.getElementById('userTable').innerHTML = '<p style="color:#c62828">加载失败</p>'; }
 }
 
 async function logout() { await fetch('/admin/api/logout',{method:'POST'}); window.location.href='/admin'; }
 loadUsers(1);
-<</script>
-<</body>
-<</html>
+</script>
+</body>
+</html>

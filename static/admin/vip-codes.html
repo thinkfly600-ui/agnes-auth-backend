@@ -50,8 +50,8 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
 .pagination button.active { background: #533483; color: white; border-color: #533483; }
 .spinner { width: 24px; height: 24px; border: 3px solid #e0e0e0; border-top-color: #1a1a2e; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 20px auto; }
 @keyframes spin { to { transform: rotate(360deg); } }
-<</style>
-<</head>
+</style>
+</head>
 <body>
 <nav>
     <h2>猸?VIP码管理</h2>
@@ -61,7 +61,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
         <a href="/admin/free-users">免费用户</a>
     </div>
     <button onclick="logout()">退出登录?</button>
-<</nav>
+</nav>
 <div class="container">
     <div class="card">
         <h3>🔑 批量生成VIP鐮?</h3>
@@ -81,8 +81,8 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
                 <option value="">全部状态</option>
                 <option value="unused">未使用?</option>
                 <option value="used">已使</option>
-                <option value="revoked">已撤<</option>
-            <</select>
+                <option value="revoked">已撤</option>
+            </select>
             <input type="text" id="searchInput" placeholder="搜索VIP码或手机号" style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
             <button onclick="loadCodes(1)">馃攳 搜索</button>
         </div>
@@ -120,12 +120,12 @@ async function loadCodes(page) {
         const data = await resp.json();
         renderTable(data);
         renderPagination(data.total, data.per_page, data.page);
-    } catch(e) { document.getElementById('codeTable').innerHTML = '<p style="color:#c62828">加载失败<</p>'; }
+    } catch(e) { document.getElementById('codeTable').innerHTML = '<p style="color:#c62828">加载失败</p>'; }
 }
 
 function renderTable(data) {
     if (!data.items.length) {
-        document.getElementById('codeTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">暂无数据<</p>';
+        document.getElementById('codeTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">暂无数据</p>';
         return;
     }
     let rows = '';
@@ -143,9 +143,9 @@ function renderTable(data) {
             <td>${r.used_at||'-'}</td>
             <td>${r.note||'-'}</td>
             <td>${action}</td>
-        <</tr>`;
+        </tr>`;
     });
-    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状?</th><th>VIP鐮?</th><th>使用</th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th><</tr><</thead><tbody>${rows}<</tbody><</table>`;
+    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状?</th><th>VIP鐮?</th><th>使用</th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function renderPagination(total, perPage, page) {
@@ -228,15 +228,15 @@ async function doAssign() {
         else { toast(data.error || '分配失败'); }
     } catch(e) { toast('操作失败'); }
 }
-<</script>
+</script>
 
 <div class="modal" id="assignModal">
     <div class="modal-box">
         <h3>📋 分配VIP码</h3>
         <div style="font-family:monospace;font-size:14px;margin-bottom:12px" id="assignCode"></div>
-        <label style="font-size:13px;color:#555">📱 客户手机号<</label>
+        <label style="font-size:13px;color:#555">📱 客户手机号</label>
         <input type="tel" id="assignPhone" placeholder="11位手机号" maxlength="11">
-        <label style="font-size:13px;color:#555;margin-top:8px;display:block">📝 备注<</label>
+        <label style="font-size:13px;color:#555;margin-top:8px;display:block">📝 备注</label>
         <input type="text" id="assignNote" placeholder="如：张先生 6月活动">
         <div class="modal-btns">
             <button class="btn-outline" onclick="document.getElementById('assignModal').classList.remove('show')">取消</button>
@@ -244,5 +244,5 @@ async function doAssign() {
         </div>
     </div>
 </div>
-<</body>
-<</html>
+</body>
+</html>

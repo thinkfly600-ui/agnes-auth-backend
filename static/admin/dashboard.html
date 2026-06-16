@@ -32,23 +32,23 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; colo
 .badge-expired { background: #ffebee; color: #c62828; }
 .spinner { width: 24px; height: 24px; border: 3px solid #e0e0e0; border-top-color: #1a1a2e; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 20px auto; }
 @keyframes spin { to { transform: rotate(360deg); } }
-<</style>
-<</head>
+</style>
+</head>
 <body>
 <nav>
-    <h2>📊 管理后台<</h2>
+    <h2>📊 管理后台</h2>
     <div class="links">
         <a href="/admin/dashboard" class="active">仪表盘</a>
         <a href="/admin/vip-codes">VIP码管理</a>
         <a href="/admin/free-users">免费用户</a>
     </div>
     <button onclick="logout()">退出登录?</button>
-<</nav>
+</nav>
 <div class="container">
     <div class="stats" id="stats"></div>
     <div class="table-card">
         <h3>📅 近7天免费用户?</h3>
-        <table id="recentUsers"><tbody><tr><td colspan="6" style="text-align:center;color:#aaa">加载..</td><</tr><</tbody><</table>
+        <table id="recentUsers"><tbody><tr><td colspan="6" style="text-align:center;color:#aaa">加载..</td></tr></tbody></table>
     </div>
 </div>
 <script>
@@ -78,15 +78,15 @@ async function load() {
         const ud = await u.json();
         let rows = '';
         ud.items.slice(0,10).forEach(r => {
-            rows += `<tr><td>${r.phone}</td><td>${r.code}</td><td>${getBadge(r.tier)}</td><td>${r.expires_at}</td><td>${getExpBadge(r.expire_status)}</td><td>${r.upgraded_at||'-'}</td><</tr>`;
+            rows += `<tr><td>${r.phone}</td><td>${r.code}</td><td>${getBadge(r.tier)}</td><td>${r.expires_at}</td><td>${getExpBadge(r.expire_status)}</td><td>${r.upgraded_at||'-'}</td></tr>`;
         });
-        document.getElementById('recentUsers').innerHTML = `<thead><tr><th>手机</th><th>激活码</th><th>等级</th><th>到期</th><th>状?</th><th>升级时间</th><</tr><</thead><tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:#aaa">暂无数据</td><</tr>'}<</tbody>`;
+        document.getElementById('recentUsers').innerHTML = `<thead><tr><th>手机</th><th>激活码</th><th>等级</th><th>到期</th><th>状?</th><th>升级时间</th></tr></thead><tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:#aaa">暂无数据</td></tr>'}</tbody>`;
     } catch(e) {
         document.getElementById('stats').innerHTML = '<div class="stat-card"><div class="label">错</div><div class="value" style="font-size:16px">加载失败</div></div>';
     }
 }
 async function logout() { await fetch('/admin/api/logout',{method:'POST'}); window.location.href='/admin'; }
 load();
-<</script>
-<</body>
-<</html>
+</script>
+</body>
+</html>
