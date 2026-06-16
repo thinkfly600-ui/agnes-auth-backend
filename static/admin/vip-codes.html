@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>管理后台 - VIP码管理</title>
+<title>绠＄悊鍚庡彴 - VIP鐮佺鐞?/title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; min-height: 100vh; }
@@ -34,6 +34,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
 .badge-unused { background: #e8f5e9; color: #2e7d32; }
 .badge-used { background: #e3f2fd; color: #1565c0; }
 .badge-revoked { background: #ffebee; color: #c62828; }
+.badge-assigned { background: #fff8e1; color: #f57f17; }
 .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
 .modal.show { display: flex; }
 .modal-box { background: white; border-radius: 16px; padding: 32px; width: 440px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
@@ -53,37 +54,37 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
 </head>
 <body>
 <nav>
-    <h2>⭐ VIP码管理</h2>
+    <h2>猸?VIP鐮佺鐞?/h2>
     <div class="links">
-        <a href="/admin/dashboard">仪表盘</a>
-        <a href="/admin/vip-codes" class="active">VIP码管理</a>
-        <a href="/admin/free-users">免费用户</a>
+        <a href="/admin/dashboard">浠〃鐩?/a>
+        <a href="/admin/vip-codes" class="active">VIP鐮佺鐞?/a>
+        <a href="/admin/free-users">鍏嶈垂鐢ㄦ埛</a>
     </div>
-    <button onclick="logout()">退出登录</button>
+    <button onclick="logout()">閫€鍑虹櫥褰?/button>
 </nav>
 <div class="container">
     <div class="card">
-        <h3>🔧 批量生成VIP码</h3>
+        <h3>馃敡 鎵归噺鐢熸垚VIP鐮?/h3>
         <div class="toolbar">
             <input type="number" id="genCount" value="10" min="1" max="500" style="width:80px">
-            <button class="btn-primary" onclick="generateCodes()">生成VIP码</button>
-            <input type="text" id="genNote" placeholder="备注（如：6月活动批次）" style="width:200px">
-            <button class="btn-outline" onclick="exportCSV()">📥 导出CSV</button>
-            <button class="btn-outline" onclick="backupDB()">💾 备份数据库</button>
+            <button class="btn-primary" onclick="generateCodes()">鐢熸垚VIP鐮?/button>
+            <input type="text" id="genNote" placeholder="澶囨敞锛堝锛?鏈堟椿鍔ㄦ壒娆★級" style="width:200px">
+            <button class="btn-outline" onclick="exportCSV()">馃摜 瀵煎嚭CSV</button>
+            <button class="btn-outline" onclick="backupDB()">馃捑 澶囦唤鏁版嵁搴?/button>
         </div>
     </div>
 
     <div class="card">
-        <h3>📋 VIP码列表</h3>
+        <h3>馃搵 VIP鐮佸垪琛?/h3>
         <div class="toolbar">
             <select id="filterStatus" onchange="loadCodes(1)">
-                <option value="">全部状态</option>
-                <option value="unused">未使用</option>
-                <option value="used">已使用</option>
-                <option value="revoked">已撤销</option>
+                <option value="">鍏ㄩ儴鐘舵€?/option>
+                <option value="unused">鏈娇鐢?/option>
+                <option value="used">宸蹭娇鐢?/option>
+                <option value="revoked">宸叉挙閿€</option>
             </select>
-            <input type="text" id="searchInput" placeholder="搜索VIP码或手机号..." style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
-            <button onclick="loadCodes(1)">🔍 搜索</button>
+            <input type="text" id="searchInput" placeholder="鎼滅储VIP鐮佹垨鎵嬫満鍙?.." style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
+            <button onclick="loadCodes(1)">馃攳 鎼滅储</button>
         </div>
         <div id="codeTable"><div class="spinner"></div></div>
         <div class="pagination" id="pagination"></div>
@@ -92,11 +93,11 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
 
 <div class="modal" id="genModal">
     <div class="modal-box">
-        <h3>✅ 生成结果</h3>
+        <h3>鉁?鐢熸垚缁撴灉</h3>
         <div id="genResult" style="max-height:400px;overflow-y:auto;font-family:monospace;font-size:13px;line-height:2;"></div>
         <div class="modal-btns">
-            <button class="btn-outline" onclick="copyGenResult()">📋 一键复制</button>
-            <button class="btn-primary" onclick="document.getElementById('genModal').classList.remove('show');loadCodes(1)">关闭</button>
+            <button class="btn-outline" onclick="copyGenResult()">馃搵 涓€閿鍒?/button>
+            <button class="btn-primary" onclick="document.getElementById('genModal').classList.remove('show');loadCodes(1)">鍏抽棴</button>
         </div>
     </div>
 </div>
@@ -119,20 +120,20 @@ async function loadCodes(page) {
         const data = await resp.json();
         renderTable(data);
         renderPagination(data.total, data.per_page, data.page);
-    } catch(e) { document.getElementById('codeTable').innerHTML = '<p style="color:#c62828">加载失败</p>'; }
+    } catch(e) { document.getElementById('codeTable').innerHTML = '<p style="color:#c62828">鍔犺浇澶辫触</p>'; }
 }
 
 function renderTable(data) {
     if (!data.items.length) {
-        document.getElementById('codeTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">暂无数据</p>';
+        document.getElementById('codeTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">鏆傛棤鏁版嵁</p>';
         return;
     }
     let rows = '';
     data.items.forEach(r => {
         const badge = r.status==='unused'?'badge-unused':r.status==='used'?'badge-used':'badge-revoked';
-        const label = r.status==='unused'?'未使用':r.status==='used'?'已使用':'已撤销';
-        const action = r.status==='unused'
-            ? `<button class="btn-danger" style="padding:4px 10px;font-size:12px" onclick="revokeCode('${r.vip_code}')">撤销</button>`
+        const label = r.status==='unused'?'鏈娇鐢?:r.status==='used'?'宸蹭娇鐢?:'宸叉挙閿€';
+        const action = (r.status==='unused' || r.status==='assigned')
+            ? `<button class="btn-danger" style="padding:4px 10px;font-size:12px" onclick="revokeCode('${r.vip_code}')">鎾ら攢</button>`
             : '-';
         rows += `<tr>
             <td><span class="badge ${badge}">${label}</span></td>
@@ -144,7 +145,7 @@ function renderTable(data) {
             <td>${action}</td>
         </tr>`;
     });
-    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状态</th><th>VIP码</th><th>使用者</th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table>`;
+    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>鐘舵€?/th><th>VIP鐮?/th><th>浣跨敤鑰?/th><th>鐢熸垚鏃堕棿</th><th>浣跨敤鏃堕棿</th><th>澶囨敞</th><th>鎿嶄綔</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function renderPagination(total, perPage, page) {
@@ -166,29 +167,29 @@ async function generateCodes() {
             body: JSON.stringify({count, note})
         });
         const data = await resp.json();
-        let html = `<p style="margin-bottom:10px">批次: ${data.batch_id} | 共 ${data.count} 个</p>`;
+        let html = `<p style="margin-bottom:10px">鎵规: ${data.batch_id} | 鍏?${data.count} 涓?/p>`;
         data.codes.forEach(c => { html += `<div>${c.vip_code}</div>`; });
         document.getElementById('genResult').innerHTML = html;
         document.getElementById('genModal').classList.add('show');
-    } catch(e) { toast('生成失败'); }
+    } catch(e) { toast('鐢熸垚澶辫触'); }
 }
 
 async function revokeCode(vipCode) {
-    if (!confirm('确认撤销此VIP码？撤销后无法恢复。')) return;
+    if (!confirm('纭鎾ら攢姝IP鐮侊紵鎾ら攢鍚庢棤娉曟仮澶嶃€?)) return;
     try {
         const resp = await fetch('/admin/api/vip-revoke', {
             method: 'POST', headers: {'Content-Type':'application/json'},
             body: JSON.stringify({vip_code: vipCode})
         });
         const data = await resp.json();
-        if (data.success) { toast('撤销成功'); loadCodes(currentPage); }
-        else { toast(data.error || '撤销失败', 'error'); }
-    } catch(e) { toast('操作失败'); }
+        if (data.success) { toast('鎾ら攢鎴愬姛'); loadCodes(currentPage); }
+        else { toast(data.error || '鎾ら攢澶辫触', 'error'); }
+    } catch(e) { toast('鎿嶄綔澶辫触'); }
 }
 
 function copyGenResult() {
     const text = document.getElementById('genResult').innerText;
-    navigator.clipboard.writeText(text).then(() => toast('已复制到剪贴板'));
+    navigator.clipboard.writeText(text).then(() => toast('宸插鍒跺埌鍓创鏉?));
 }
 
 async function exportCSV() {
@@ -202,7 +203,7 @@ async function exportCSV() {
 async function backupDB() {
     const resp = await fetch('/admin/api/backup', {method:'POST'});
     const data = await resp.json();
-    toast(data.success ? '数据库已备份: ' + data.path : '备份失败');
+    toast(data.success ? '鏁版嵁搴撳凡澶囦唤: ' + data.path : '澶囦唤澶辫触');
 }
 
 async function logout() { await fetch('/admin/api/logout',{method:'POST'}); window.location.href='/admin'; }
@@ -214,6 +215,34 @@ function toast(msg) {
 }
 
 loadCodes(1);
+
+let assignTarget = '';
+function showAssign(code) { assignTarget = code; document.getElementById('assignCode').textContent = code; document.getElementById('assignPhone').value = ''; document.getElementById('assignNote').value = ''; document.getElementById('assignModal').classList.add('show'); }
+async function doAssign() {
+    const phone = document.getElementById('assignPhone').value.trim();
+    if (!/^1\d{10}$/.test(phone)) { toast('请输入正确的11位手机号'); return; }
+    try {
+        const resp = await fetch('/admin/api/vip-assign', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({vip_code:assignTarget, phone, note:document.getElementById('assignNote').value.trim()}) });
+        const data = await resp.json();
+        if (data.success) { toast('分配成功'); document.getElementById('assignModal').classList.remove('show'); loadCodes(currentPage); }
+        else { toast(data.error || '分配失败'); }
+    } catch(e) { toast('操作失败'); }
+}
 </script>
+
+<div class="modal" id="assignModal">
+    <div class="modal-box">
+        <h3>📋 分配VIP码</h3>
+        <div style="font-family:monospace;font-size:14px;margin-bottom:12px" id="assignCode"></div>
+        <label style="font-size:13px;color:#555">📱 客户手机号</label>
+        <input type="tel" id="assignPhone" placeholder="11位手机号" maxlength="11">
+        <label style="font-size:13px;color:#555;margin-top:8px;display:block">📝 备注</label>
+        <input type="text" id="assignNote" placeholder="如：张先生 6月活动">
+        <div class="modal-btns">
+            <button class="btn-outline" onclick="document.getElementById('assignModal').classList.remove('show')">取消</button>
+            <button class="btn-primary" onclick="doAssign()">确认分配</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

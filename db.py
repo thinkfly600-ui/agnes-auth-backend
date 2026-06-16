@@ -327,3 +327,133 @@ def backup_db():
 if __name__ == "__main__":
     init_db()
     print("Database initialized at", DB_PATH)
+# ============== New: VIP assign + Free codes batch management ==============
+
+def assign_vip_code(vip_code, phone, note=""):
+    """Mark a VIP code as assigned to a specific customer phone."""
+    conn = get_db()
+    row = conn.execute(
+        "SELECT * FROM vip_codes WHERE vip_code = ? AND status = 'unused'", (vip_code,)
+    ).fetchone()
+    if not row:
+        conn.close()
+        return {"success": False, "error": "VIP码不存在或已被使用/分配"}
+    
+    conn.execute(
+        "UPDATE vip_codes SET status='assigned', used_by_phone=?, note=? WHERE vip_code=?",
+        (phone, note, vip_code)
+    )
+    conn.commit()
+    _log_admin("assign_vip", f"Assigned {vip_code} to {phone}")
+    conn.close()
+    return {"success": True}
+
+def generate_free_codes_batch(count, note=""):
+    """Batch generate free activation codes (for manual distribution)."""
+    conn = get_db()
+    batch_id = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    codes = []
+    for _ in range(count):
+        code = _gen_code("FREE")
+        conn.execute(
+            "INSERT INTO free_codes (phone, code, tier, created_at, expires_at) VALUES (?,?,?,?,?)",
+            ("", code, "free", now_str(), expiry_date())
+        )
+        codes.append({"code": code, "status": "unused"})
+    conn.commit()
+    _log_admin("generate_free", f"Generated {count} free codes, batch {batch_id}")
+    conn.close()
+    return {"batch_id": batch_id, "codes": codes, "count": count}
+
+def get_free_codes_admin(status=None, search=None, page=1, per_page=50):
+    """List free codes for admin panel (with filters)."""
+    conn = get_db()
+    query = "SELECT * FROM free_codes WHERE 1=1"
+    params = []
+    if status == "used":
+        query += " AND phone != ''"
+    elif status == "unused":
+        query += " AND phone = ''"
+    elif status == "expired":
+        query += " AND expires_at < ?"
+        params.append(datetime.datetime.now().strftime("%Y-%m-%d"))
+    elif status == "assigned":
+        query += " AND phone != '' AND tier='free'"
+    if search:
+        query += " AND (code LIKE ? OR phone LIKE ?)"
+        params.extend([f"%{search}%", f"%{search}%"])
+    query += " ORDER BY id DESC LIMIT ? OFFSET ?"
+    params.extend([per_page, (page - 1) * per_page])
+    
+    rows = conn.execute(query, params).fetchall()
+    
+    count_query = "SELECT COUNT(*) FROM free_codes WHERE 1=1"
+    cp = []
+    if status == "used":
+        count_query += " AND phone != ''"
+    elif status == "unused":
+        count_query += " AND phone = ''"
+    elif status == "expired":
+        count_query += " AND expires_at < ?"
+        cp.append(datetime.datetime.now().strftime("%Y-%m-%d"))
+    if search:
+        count_query += " AND (code LIKE ? OR phone LIKE ?)"
+        cp.extend([f"%{search}%", f"%{search}%"])
+    total = conn.execute(count_query, cp).fetchone()[0]
+    conn.close()
+    
+    now = datetime.datetime.now()
+    result = []
+    for r in rows:
+        phone = r["phone"]
+        masked = phone[:3] + "****" + phone[-4:] if phone else ""
+        expires = datetime.datetime.strptime(r["expires_at"], "%Y-%m-%d")
+        expire_status = "expired" if expires <= now else ("soon" if expires <= now + datetime.timedelta(days=30) else "active")
+        codestatus = "used" if phone else "unused"
+        result.append({
+            "id": r["id"], "code": r["code"], "phone": masked,
+            "tier": r["tier"], "status": codestatus,
+            "created_at": r["created_at"], "expires_at": r["expires_at"],
+            "expire_status": expire_status, "vip_code": r["vip_code"], "upgraded_at": r["upgraded_at"]
+        })
+    return {"items": result, "total": total, "page": page, "per_page": per_page}
+
+def assign_free_code(code, phone):
+    """Assign a pre-generated free code to a phone number."""
+    conn = get_db()
+    row = conn.execute(
+        "SELECT * FROM free_codes WHERE code = ? AND phone = ''", (code,)
+    ).fetchone()
+    if not row:
+        conn.close()
+        return {"success": False, "error": "激活码不存在或已被使用"}
+    
+    # Check phone not already in system
+    existing = conn.execute("SELECT * FROM free_codes WHERE phone = ?", (phone,)).fetchone()
+    if existing:
+        now = datetime.datetime.now()
+        expires = datetime.datetime.strptime(existing["expires_at"], "%Y-%m-%d")
+        if expires > now:
+            conn.close()
+            return {"success": False, "error": f"该手机号已有激活码: {existing['code']}"}
+    
+    conn.execute("UPDATE free_codes SET phone=? WHERE code=?", (phone, code))
+    conn.commit()
+    _log_admin("assign_free", f"Assigned {code} to {phone}")
+    conn.close()
+    return {"success": True, "code": code, "phone": phone[:3] + "****" + phone[-4:]}
+
+def revoke_free_code(code):
+    """Revoke an unused free code."""
+    conn = get_db()
+    row = conn.execute(
+        "SELECT * FROM free_codes WHERE code = ? AND phone = ''", (code,)
+    ).fetchone()
+    if not row:
+        conn.close()
+        return {"success": False, "error": "激活码不存在或已被使用，无法撤销"}
+    conn.execute("DELETE FROM free_codes WHERE code = ?", (code,))
+    conn.commit()
+    _log_admin("revoke_free", f"Revoked free code {code}")
+    conn.close()
+    return {"success": True}
