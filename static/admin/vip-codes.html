@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>管理后台 - VIP码管理</title>
+<title>管理后台 - VIP码管理<</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; min-height: 100vh; }
@@ -50,59 +50,59 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
 .pagination button.active { background: #533483; color: white; border-color: #533483; }
 .spinner { width: 24px; height: 24px; border: 3px solid #e0e0e0; border-top-color: #1a1a2e; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 20px auto; }
 @keyframes spin { to { transform: rotate(360deg); } }
-</style>
-</head>
+<</style>
+<</head>
 <body>
 <nav>
-    <h2>猸?VIP码管理/h2>
+    <h2>猸?VIP码管理</h2>
     <div class="links">
-        <a href="/admin/dashboard">浠〃鐩?/a>
-        <a href="/admin/vip-codes" class="active">VIP码管理/a>
-        <a href="/admin/free-users">免费用户</a>
-    </div>
-    <button onclick="logout()">閫€退出登录?/button>
-</nav>
+        <a href="/admin/dashboard">浠〃鐩?</a>
+        <a href="/admin/vip-codes" class="active">VIP码管理</a>
+        <a href="/admin/free-users">免费用户<</a>
+    <</div>
+    <button onclick="logout()">退出登录?</button>
+<</nav>
 <div class="container">
     <div class="card">
-        <h3>馃敡 批量生成VIP鐮?/h3>
+        <h3>🔑 批量生成VIP鐮?</h3>
         <div class="toolbar">
             <input type="number" id="genCount" value="10" min="1" max="500" style="width:80px">
-            <button class="btn-primary" onclick="generateCodes()">生成VIP鐮?/button>
+            <button class="btn-primary" onclick="generateCodes()">生成VIP鐮?</button>
             <input type="text" id="genNote" placeholder="备注（管理月活动批次）" style="width:200px">
-            <button class="btn-outline" onclick="exportCSV()">馃摜 导出CSV</button>
-            <button class="btn-outline" onclick="backupDB()">馃捑 备份数据库/button>
-        </div>
-    </div>
+            <button class="btn-outline" onclick="exportCSV()">馃摜 导出CSV<</button>
+            <button class="btn-outline" onclick="backupDB()">馃捑 备份数据库</button>
+        <</div>
+    <</div>
 
     <div class="card">
-        <h3>馃搵 VIP码列/h3>
+        <h3>📅 VIP码列</h3>
         <div class="toolbar">
             <select id="filterStatus" onchange="loadCodes(1)">
-                <option value="">全部状态/option>
-                <option value="unused">鏈娇鐢?/option>
-                <option value="used">已使/option>
-                <option value="revoked">已撤</option>
-            </select>
+                <option value="">全部状态</option>
+                <option value="unused">未使用?</option>
+                <option value="used">已使</option>
+                <option value="revoked">已撤<</option>
+            <</select>
             <input type="text" id="searchInput" placeholder="搜索VIP码或手机号" style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
-            <button onclick="loadCodes(1)">馃攳 搜索</button>
-        </div>
-        <div id="codeTable"><div class="spinner"></div></div>
-        <div class="pagination" id="pagination"></div>
-    </div>
-</div>
+            <button onclick="loadCodes(1)">馃攳 搜索<</button>
+        <</div>
+        <div id="codeTable"><div class="spinner"><</div><</div>
+        <div class="pagination" id="pagination"><</div>
+    <</div>
+<</div>
 
 <div class="modal" id="genModal">
     <div class="modal-box">
-        <h3>鉁?生成结果</h3>
-        <div id="genResult" style="max-height:400px;overflow-y:auto;font-family:monospace;font-size:13px;line-height:2;"></div>
+        <h3>鉁?生成结果<</h3>
+        <div id="genResult" style="max-height:400px;overflow-y:auto;font-family:monospace;font-size:13px;line-height:2;"><</div>
         <div class="modal-btns">
-            <button class="btn-outline" onclick="copyGenResult()">馃搵 涓€閿鍒?/button>
-            <button class="btn-primary" onclick="document.getElementById('genModal').classList.remove('show');loadCodes(1)">关闭</button>
-        </div>
-    </div>
-</div>
+            <button class="btn-outline" onclick="copyGenResult()">📅 涓€閿鍒?</button>
+            <button class="btn-primary" onclick="document.getElementById('genModal').classList.remove('show');loadCodes(1)">关闭<</button>
+        <</div>
+    <</div>
+<</div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast"><</div>
 
 <script>
 let currentPage = 1;
@@ -120,32 +120,32 @@ async function loadCodes(page) {
         const data = await resp.json();
         renderTable(data);
         renderPagination(data.total, data.per_page, data.page);
-    } catch(e) { document.getElementById('codeTable').innerHTML = '<p style="color:#c62828">加载失败</p>'; }
+    } catch(e) { document.getElementById('codeTable').innerHTML = '<p style="color:#c62828">加载失败<</p>'; }
 }
 
 function renderTable(data) {
     if (!data.items.length) {
-        document.getElementById('codeTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">暂无数据</p>';
+        document.getElementById('codeTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">暂无数据<</p>';
         return;
     }
     let rows = '';
     data.items.forEach(r => {
         const badge = r.status==='unused'?'badge-unused':r.status==='used'?'badge-used':'badge-revoked';
-        const label = r.status==='unused'?'鏈娇鐢?:r.status==='used'?'已使:'已撤';
+        const label = r.status==='unused'?'未使用?:r.status==='used'?'已使:'已撤';
         const action = (r.status==='unused' || r.status==='assigned')
-            ? `<button class="btn-danger" style="padding:4px 10px;font-size:12px" onclick="revokeCode('${r.vip_code}')">撤销</button>`
+            ? `<button class="btn-danger" style="padding:4px 10px;font-size:12px" onclick="revokeCode('${r.vip_code}')">撤销<</button>`
             : '-';
         rows += `<tr>
-            <td><span class="badge ${badge}">${label}</span></td>
-            <td class="code-cell">${r.vip_code}</td>
-            <td>${r.used_by_phone||'-'}</td>
-            <td>${r.generated_at}</td>
-            <td>${r.used_at||'-'}</td>
-            <td>${r.note||'-'}</td>
-            <td>${action}</td>
-        </tr>`;
+            <td><span class="badge ${badge}">${label}<</span><</td>
+            <td class="code-cell">${r.vip_code}<</td>
+            <td>${r.used_by_phone||'-'}<</td>
+            <td>${r.generated_at}<</td>
+            <td>${r.used_at||'-'}<</td>
+            <td>${r.note||'-'}<</td>
+            <td>${action}<</td>
+        <</tr>`;
     });
-    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状?/th><th>VIP鐮?/th><th>使用/th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table>`;
+    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状?</th><th>VIP鐮?</th><th>使用</th><th>生成时间<</th><th>使用时间<</th><th>备注<</th><th>操作<</th><</tr><</thead><tbody>${rows}<</tbody><</table>`;
 }
 
 function renderPagination(total, perPage, page) {
@@ -153,7 +153,7 @@ function renderPagination(total, perPage, page) {
     if (pages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
     let html = '';
     for (let i = 1; i <= pages; i++) {
-        html += `<button class="${i===page?'active':''}" onclick="loadCodes(${i})" ${i===page?'disabled':''}>${i}</button>`;
+        html += `<button class="${i===page?'active':''}" onclick="loadCodes(${i})" ${i===page?'disabled':''}>${i}<</button>`;
     }
     document.getElementById('pagination').innerHTML = html;
 }
@@ -167,8 +167,8 @@ async function generateCodes() {
             body: JSON.stringify({count, note})
         });
         const data = await resp.json();
-        let html = `<p style="margin-bottom:10px">批: ${data.batch_id} | 鍏?${data.count} 涓?/p>`;
-        data.codes.forEach(c => { html += `<div>${c.vip_code}</div>`; });
+        let html = `<p style="margin-bottom:10px">批: ${data.batch_id} | 鍏?${data.count} 涓?</p>`;
+        data.codes.forEach(c => { html += `<div>${c.vip_code}<</div>`; });
         document.getElementById('genResult').innerHTML = html;
         document.getElementById('genModal').classList.add('show');
     } catch(e) { toast('生成失败'); }
@@ -228,21 +228,21 @@ async function doAssign() {
         else { toast(data.error || '分配失败'); }
     } catch(e) { toast('操作失败'); }
 }
-</script>
+<</script>
 
 <div class="modal" id="assignModal">
     <div class="modal-box">
-        <h3>📋 分配VIP码</h3>
-        <div style="font-family:monospace;font-size:14px;margin-bottom:12px" id="assignCode"></div>
-        <label style="font-size:13px;color:#555">📱 客户手机号</label>
+        <h3>📋 分配VIP码<</h3>
+        <div style="font-family:monospace;font-size:14px;margin-bottom:12px" id="assignCode"><</div>
+        <label style="font-size:13px;color:#555">📱 客户手机号<</label>
         <input type="tel" id="assignPhone" placeholder="11位手机号" maxlength="11">
-        <label style="font-size:13px;color:#555;margin-top:8px;display:block">📝 备注</label>
+        <label style="font-size:13px;color:#555;margin-top:8px;display:block">📝 备注<</label>
         <input type="text" id="assignNote" placeholder="如：张先生 6月活动">
         <div class="modal-btns">
-            <button class="btn-outline" onclick="document.getElementById('assignModal').classList.remove('show')">取消</button>
-            <button class="btn-primary" onclick="doAssign()">确认分配</button>
-        </div>
-    </div>
-</div>
-</body>
-</html>
+            <button class="btn-outline" onclick="document.getElementById('assignModal').classList.remove('show')">取消<</button>
+            <button class="btn-primary" onclick="doAssign()">确认分配<</button>
+        <</div>
+    <</div>
+<</div>
+<</body>
+<</html>
