@@ -70,20 +70,20 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
             <button class="btn-primary" onclick="generateCodes()">生成VIP鐮?/button>
             <input type="text" id="genNote" placeholder="备注（管理月活动批次）" style="width:200px">
             <button class="btn-outline" onclick="exportCSV()">馃摜 导出CSV</button>
-            <button class="btn-outline" onclick="backupDB()">馃捑 备份数据�?/button>
+            <button class="btn-outline" onclick="backupDB()">馃捑 备份数据库/button>
         </div>
     </div>
 
     <div class="card">
-        <h3>馃搵 VIP码列�?/h3>
+        <h3>馃搵 VIP码列/h3>
         <div class="toolbar">
             <select id="filterStatus" onchange="loadCodes(1)">
-                <option value="">全部状�??/option>
+                <option value="">全部状?/option>
                 <option value="unused">鏈娇鐢?/option>
-                <option value="used">已使�?/option>
-                <option value="revoked">已撤�?</option>
+                <option value="used">已使/option>
+                <option value="revoked">已撤</option>
             </select>
-            <input type="text" id="searchInput" placeholder="搜索VIP码或手机�?.." style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
+            <input type="text" id="searchInput" placeholder="搜索VIP码或手机.." style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
             <button onclick="loadCodes(1)">馃攳 搜索</button>
         </div>
         <div id="codeTable"><div class="spinner"></div></div>
@@ -131,7 +131,7 @@ function renderTable(data) {
     let rows = '';
     data.items.forEach(r => {
         const badge = r.status==='unused'?'badge-unused':r.status==='used'?'badge-used':'badge-revoked';
-        const label = r.status==='unused'?'鏈娇鐢?:r.status==='used'?'已使�?:'已撤�?';
+        const label = r.status==='unused'?'鏈娇鐢?:r.status==='used'?'已使:'已撤';
         const action = (r.status==='unused' || r.status==='assigned')
             ? `<button class="btn-danger" style="padding:4px 10px;font-size:12px" onclick="revokeCode('${r.vip_code}')">撤销</button>`
             : '-';
@@ -145,7 +145,7 @@ function renderTable(data) {
             <td>${action}</td>
         </tr>`;
     });
-    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状�??/th><th>VIP鐮?/th><th>使用�?/th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table>`;
+    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状?/th><th>VIP鐮?/th><th>使用/th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function renderPagination(total, perPage, page) {
@@ -167,7 +167,7 @@ async function generateCodes() {
             body: JSON.stringify({count, note})
         });
         const data = await resp.json();
-        let html = `<p style="margin-bottom:10px">批�?: ${data.batch_id} | 鍏?${data.count} 涓?/p>`;
+        let html = `<p style="margin-bottom:10px">批: ${data.batch_id} | 鍏?${data.count} 涓?/p>`;
         data.codes.forEach(c => { html += `<div>${c.vip_code}</div>`; });
         document.getElementById('genResult').innerHTML = html;
         document.getElementById('genModal').classList.add('show');
@@ -175,7 +175,7 @@ async function generateCodes() {
 }
 
 async function revokeCode(vipCode) {
-    if (!confirm('纭鎾ら攢姝IP码？撤销后无法恢复�??)) return;
+    if (!confirm('纭鎾ら攢姝IP码？撤销后无法恢复?)) return;
     try {
         const resp = await fetch('/admin/api/vip-revoke', {
             method: 'POST', headers: {'Content-Type':'application/json'},
@@ -189,7 +189,7 @@ async function revokeCode(vipCode) {
 
 function copyGenResult() {
     const text = document.getElementById('genResult').innerText;
-    navigator.clipboard.writeText(text).then(() => toast('已�?制到�?���?));
+    navigator.clipboard.writeText(text).then(() => toast('已制到));
 }
 
 async function exportCSV() {

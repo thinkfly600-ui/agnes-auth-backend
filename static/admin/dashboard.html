@@ -39,7 +39,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; colo
     <h2>馃搳 管理后台</h2>
     <div class="links">
         <a href="/admin/dashboard" class="active">仪表盘/a>
-        <a href="/admin/vip-codes">VIP码�?�?/a>
+        <a href="/admin/vip-codes">VIP码管理/a>
         <a href="/admin/free-users">免费用户</a>
     </div>
     <button onclick="logout()">閫€鍑虹櫥褰?/button>
@@ -48,7 +48,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; colo
     <div class="stats" id="stats"></div>
     <div class="table-card">
         <h3>馃搵 鏈€杩戝厤璐圭敤鎴?/h3>
-        <table id="recentUsers"><tbody><tr><td colspan="6" style="text-align:center;color:#aaa">加载�?..</td></tr></tbody></table>
+        <table id="recentUsers"><tbody><tr><td colspan="6" style="text-align:center;color:#aaa">加载..</td></tr></tbody></table>
     </div>
 </div>
 <script>
@@ -60,7 +60,7 @@ function getBadge(tier) {
 function getExpBadge(s) {
     if (s==='active') return '<span class="badge badge-active">正常</span>';
     if (s==='soon') return '<span class="badge badge-soon">即将到期</span>';
-    return '<span class="badge badge-expired">已过�?/span>';
+    return '<span class="badge badge-expired">已过/span>';
 }
 
 async function load() {
@@ -69,10 +69,10 @@ async function load() {
         if (resp.status===302||resp.redirected) { window.location.href='/admin'; return; }
         const s = await resp.json();
         document.getElementById('stats').innerHTML = `
-            <div class="stat-card"><div class="label">总免费用�?/div><div class="value">${s.total_free}</div><div class="sub">鏈懆鏂板 +${s.week_free}</div></div>
+            <div class="stat-card"><div class="label">总免费用/div><div class="value">${s.total_free}</div><div class="sub">鏈懆鏂板 +${s.week_free}</div></div>
             <div class="stat-card"><div class="label">总VIP用户</div><div class="value">${s.total_vip}</div><div class="sub">鏈懆鏂板 +${s.week_vip}</div></div>
-            <div class="stat-card"><div class="label">鏈娇鐢╒IP鐮?/div><div class="value">${s.vip_unused}</div><div class="sub">已使�?${s.vip_used}</div></div>
-            <div class="stat-card"><div class="label">到期预�?</div><div class="value">${s.soon_expire}</div><div class="sub">已过�?${s.expired}</div></div>`;
+            <div class="stat-card"><div class="label">鏈娇鐢╒IP鐮?/div><div class="value">${s.vip_unused}</div><div class="sub">已使${s.vip_used}</div></div>
+            <div class="stat-card"><div class="label">到期预</div><div class="value">${s.soon_expire}</div><div class="sub">已过${s.expired}</div></div>`;
         
         const u = await fetch('/admin/api/free-users?page=1');
         const ud = await u.json();
@@ -80,9 +80,9 @@ async function load() {
         ud.items.slice(0,10).forEach(r => {
             rows += `<tr><td>${r.phone}</td><td>${r.code}</td><td>${getBadge(r.tier)}</td><td>${r.expires_at}</td><td>${getExpBadge(r.expire_status)}</td><td>${r.upgraded_at||'-'}</td></tr>`;
         });
-        document.getElementById('recentUsers').innerHTML = `<thead><tr><th>手机�?/th><th>婵€娲荤爜</th><th>等级</th><th>到期�?/th><th>状�??/th><th>升级时间</th></tr></thead><tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:#aaa">暂无数据</td></tr>'}</tbody>`;
+        document.getElementById('recentUsers').innerHTML = `<thead><tr><th>手机/th><th>婵€娲荤爜</th><th>等级</th><th>到期/th><th>状?/th><th>升级时间</th></tr></thead><tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:#aaa">暂无数据</td></tr>'}</tbody>`;
     } catch(e) {
-        document.getElementById('stats').innerHTML = '<div class="stat-card"><div class="label">错�?</div><div class="value" style="font-size:16px">加载失败</div></div>';
+        document.getElementById('stats').innerHTML = '<div class="stat-card"><div class="label">错</div><div class="value" style="font-size:16px">加载失败</div></div>';
     }
 }
 async function logout() { await fetch('/admin/api/logout',{method:'POST'}); window.location.href='/admin'; }

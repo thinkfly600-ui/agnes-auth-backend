@@ -39,7 +39,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; colo
     <h2>馃懃 免费用户</h2>
     <div class="links">
         <a href="/admin/dashboard">浠〃鐩?/a>
-        <a href="/admin/vip-codes">VIP码�?�?/a>
+        <a href="/admin/vip-codes">VIP码管理/a>
         <a href="/admin/free-users" class="active">免费用户</a>
     </div>
     <button onclick="logout()">閫€鍑虹櫥褰?/button>
@@ -48,7 +48,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; colo
     <div class="card">
         <h3>馃搵 用户列表</h3>
         <div class="toolbar" style="color:#888;font-size:13px">
-            总�?: <strong id="totalCount">-</strong> 浜?        </div>
+            总: <strong id="totalCount">-</strong> 浜?        </div>
         <div id="userTable"><div class="spinner"></div></div>
         <div class="pagination" id="pagination"></div>
     </div>
@@ -61,7 +61,7 @@ function getTierBadge(t) { return t==='vip'?'<span class="badge badge-vip">VIP</
 function getExpBadge(s) {
     if (s==='active') return '<span class="badge badge-active">正常</span>';
     if (s==='soon') return '<span class="badge badge-soon">即将到期</span>';
-    return '<span class="badge badge-expired">已过�?/span>';
+    return '<span class="badge badge-expired">已过/span>';
 }
 
 async function loadUsers(page) {
@@ -88,7 +88,7 @@ async function loadUsers(page) {
                 <td>${r.upgraded_at||'-'}</td>
             </tr>`;
         });
-        document.getElementById('userTable').innerHTML = `<table><thead><tr><th>手机�?/th><th>婵€娲荤爜</th><th>等级</th><th>婵€娲绘椂闂?/th><th>到期�?/th><th>状�??/th><th>升级时间</th></tr></thead><tbody>${rows}</tbody></table>`;
+        document.getElementById('userTable').innerHTML = `<table><thead><tr><th>手机/th><th>婵€娲荤爜</th><th>等级</th><th>婵€娲绘椂闂?/th><th>到期/th><th>状?/th><th>升级时间</th></tr></thead><tbody>${rows}</tbody></table>`;
         
         const pages = Math.ceil(data.total / data.per_page);
         if (pages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
