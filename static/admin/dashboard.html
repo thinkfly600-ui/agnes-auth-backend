@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>绠＄悊鍚庡彴 - 浠〃鐩?/title>
+<title>管理后台 - 仪表盘</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; min-height: 100vh; }
@@ -36,11 +36,11 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; colo
 </head>
 <body>
 <nav>
-    <h2>馃搳 绠＄悊鍚庡彴</h2>
+    <h2>馃搳 管理后台</h2>
     <div class="links">
-        <a href="/admin/dashboard" class="active">浠〃鐩?/a>
-        <a href="/admin/vip-codes">VIP鐮佺鐞?/a>
-        <a href="/admin/free-users">鍏嶈垂鐢ㄦ埛</a>
+        <a href="/admin/dashboard" class="active">仪表盘/a>
+        <a href="/admin/vip-codes">VIP码�?�?/a>
+        <a href="/admin/free-users">免费用户</a>
     </div>
     <button onclick="logout()">閫€鍑虹櫥褰?/button>
 </nav>
@@ -48,19 +48,19 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; colo
     <div class="stats" id="stats"></div>
     <div class="table-card">
         <h3>馃搵 鏈€杩戝厤璐圭敤鎴?/h3>
-        <table id="recentUsers"><tbody><tr><td colspan="6" style="text-align:center;color:#aaa">鍔犺浇涓?..</td></tr></tbody></table>
+        <table id="recentUsers"><tbody><tr><td colspan="6" style="text-align:center;color:#aaa">加载�?..</td></tr></tbody></table>
     </div>
 </div>
 <script>
 function maskPhone(p) { return p ? p : '-'; }
 function getBadge(tier) {
     if (tier==='vip') return '<span class="badge badge-vip">VIP</span>';
-    return '<span class="badge badge-free">鍏嶈垂</span>';
+    return '<span class="badge badge-free">免费</span>';
 }
 function getExpBadge(s) {
-    if (s==='active') return '<span class="badge badge-active">姝ｅ父</span>';
-    if (s==='soon') return '<span class="badge badge-soon">鍗冲皢鍒版湡</span>';
-    return '<span class="badge badge-expired">宸茶繃鏈?/span>';
+    if (s==='active') return '<span class="badge badge-active">正常</span>';
+    if (s==='soon') return '<span class="badge badge-soon">即将到期</span>';
+    return '<span class="badge badge-expired">已过�?/span>';
 }
 
 async function load() {
@@ -69,10 +69,10 @@ async function load() {
         if (resp.status===302||resp.redirected) { window.location.href='/admin'; return; }
         const s = await resp.json();
         document.getElementById('stats').innerHTML = `
-            <div class="stat-card"><div class="label">鎬诲厤璐圭敤鎴?/div><div class="value">${s.total_free}</div><div class="sub">鏈懆鏂板 +${s.week_free}</div></div>
-            <div class="stat-card"><div class="label">鎬籚IP鐢ㄦ埛</div><div class="value">${s.total_vip}</div><div class="sub">鏈懆鏂板 +${s.week_vip}</div></div>
-            <div class="stat-card"><div class="label">鏈娇鐢╒IP鐮?/div><div class="value">${s.vip_unused}</div><div class="sub">宸蹭娇鐢?${s.vip_used}</div></div>
-            <div class="stat-card"><div class="label">鍒版湡棰勮</div><div class="value">${s.soon_expire}</div><div class="sub">宸茶繃鏈?${s.expired}</div></div>`;
+            <div class="stat-card"><div class="label">总免费用�?/div><div class="value">${s.total_free}</div><div class="sub">鏈懆鏂板 +${s.week_free}</div></div>
+            <div class="stat-card"><div class="label">总VIP用户</div><div class="value">${s.total_vip}</div><div class="sub">鏈懆鏂板 +${s.week_vip}</div></div>
+            <div class="stat-card"><div class="label">鏈娇鐢╒IP鐮?/div><div class="value">${s.vip_unused}</div><div class="sub">已使�?${s.vip_used}</div></div>
+            <div class="stat-card"><div class="label">到期预�?</div><div class="value">${s.soon_expire}</div><div class="sub">已过�?${s.expired}</div></div>`;
         
         const u = await fetch('/admin/api/free-users?page=1');
         const ud = await u.json();
@@ -80,9 +80,9 @@ async function load() {
         ud.items.slice(0,10).forEach(r => {
             rows += `<tr><td>${r.phone}</td><td>${r.code}</td><td>${getBadge(r.tier)}</td><td>${r.expires_at}</td><td>${getExpBadge(r.expire_status)}</td><td>${r.upgraded_at||'-'}</td></tr>`;
         });
-        document.getElementById('recentUsers').innerHTML = `<thead><tr><th>鎵嬫満鍙?/th><th>婵€娲荤爜</th><th>绛夌骇</th><th>鍒版湡鏃?/th><th>鐘舵€?/th><th>鍗囩骇鏃堕棿</th></tr></thead><tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:#aaa">鏆傛棤鏁版嵁</td></tr>'}</tbody>`;
+        document.getElementById('recentUsers').innerHTML = `<thead><tr><th>手机�?/th><th>婵€娲荤爜</th><th>等级</th><th>到期�?/th><th>状�??/th><th>升级时间</th></tr></thead><tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:#aaa">暂无数据</td></tr>'}</tbody>`;
     } catch(e) {
-        document.getElementById('stats').innerHTML = '<div class="stat-card"><div class="label">閿欒</div><div class="value" style="font-size:16px">鍔犺浇澶辫触</div></div>';
+        document.getElementById('stats').innerHTML = '<div class="stat-card"><div class="label">错�?</div><div class="value" style="font-size:16px">加载失败</div></div>';
     }
 }
 async function logout() { await fetch('/admin/api/logout',{method:'POST'}); window.location.href='/admin'; }

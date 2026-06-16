@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>绠＄悊鍚庡彴 - 鍏嶈垂鐢ㄦ埛</title>
+<title>管理后台 - 免费用户</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; min-height: 100vh; }
@@ -36,19 +36,19 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; colo
 </head>
 <body>
 <nav>
-    <h2>馃懃 鍏嶈垂鐢ㄦ埛</h2>
+    <h2>馃懃 免费用户</h2>
     <div class="links">
         <a href="/admin/dashboard">浠〃鐩?/a>
-        <a href="/admin/vip-codes">VIP鐮佺鐞?/a>
-        <a href="/admin/free-users" class="active">鍏嶈垂鐢ㄦ埛</a>
+        <a href="/admin/vip-codes">VIP码�?�?/a>
+        <a href="/admin/free-users" class="active">免费用户</a>
     </div>
     <button onclick="logout()">閫€鍑虹櫥褰?/button>
 </nav>
 <div class="container">
     <div class="card">
-        <h3>馃搵 鐢ㄦ埛鍒楄〃</h3>
+        <h3>馃搵 用户列表</h3>
         <div class="toolbar" style="color:#888;font-size:13px">
-            鎬昏: <strong id="totalCount">-</strong> 浜?        </div>
+            总�?: <strong id="totalCount">-</strong> 浜?        </div>
         <div id="userTable"><div class="spinner"></div></div>
         <div class="pagination" id="pagination"></div>
     </div>
@@ -57,11 +57,11 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; colo
 <script>
 let currentPage = 1;
 
-function getTierBadge(t) { return t==='vip'?'<span class="badge badge-vip">VIP</span>':'<span class="badge badge-free">鍏嶈垂</span>'; }
+function getTierBadge(t) { return t==='vip'?'<span class="badge badge-vip">VIP</span>':'<span class="badge badge-free">免费</span>'; }
 function getExpBadge(s) {
-    if (s==='active') return '<span class="badge badge-active">姝ｅ父</span>';
-    if (s==='soon') return '<span class="badge badge-soon">鍗冲皢鍒版湡</span>';
-    return '<span class="badge badge-expired">宸茶繃鏈?/span>';
+    if (s==='active') return '<span class="badge badge-active">正常</span>';
+    if (s==='soon') return '<span class="badge badge-soon">即将到期</span>';
+    return '<span class="badge badge-expired">已过�?/span>';
 }
 
 async function loadUsers(page) {
@@ -73,7 +73,7 @@ async function loadUsers(page) {
         document.getElementById('totalCount').textContent = data.total;
         
         if (!data.items.length) {
-            document.getElementById('userTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">鏆傛棤鐢ㄦ埛</p>';
+            document.getElementById('userTable').innerHTML = '<p style="color:#aaa;text-align:center;padding:20px">暂无用户</p>';
             return;
         }
         let rows = '';
@@ -88,7 +88,7 @@ async function loadUsers(page) {
                 <td>${r.upgraded_at||'-'}</td>
             </tr>`;
         });
-        document.getElementById('userTable').innerHTML = `<table><thead><tr><th>鎵嬫満鍙?/th><th>婵€娲荤爜</th><th>绛夌骇</th><th>婵€娲绘椂闂?/th><th>鍒版湡鏃?/th><th>鐘舵€?/th><th>鍗囩骇鏃堕棿</th></tr></thead><tbody>${rows}</tbody></table>`;
+        document.getElementById('userTable').innerHTML = `<table><thead><tr><th>手机�?/th><th>婵€娲荤爜</th><th>等级</th><th>婵€娲绘椂闂?/th><th>到期�?/th><th>状�??/th><th>升级时间</th></tr></thead><tbody>${rows}</tbody></table>`;
         
         const pages = Math.ceil(data.total / data.per_page);
         if (pages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
@@ -97,7 +97,7 @@ async function loadUsers(page) {
             ph += `<button class="${i===page?'active':''}" onclick="loadUsers(${i})" ${i===page?'disabled':''}>${i}</button>`;
         }
         document.getElementById('pagination').innerHTML = ph;
-    } catch(e) { document.getElementById('userTable').innerHTML = '<p style="color:#c62828">鍔犺浇澶辫触</p>'; }
+    } catch(e) { document.getElementById('userTable').innerHTML = '<p style="color:#c62828">加载失败</p>'; }
 }
 
 async function logout() { await fetch('/admin/api/logout',{method:'POST'}); window.location.href='/admin'; }
