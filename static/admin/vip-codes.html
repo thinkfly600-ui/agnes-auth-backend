@@ -81,7 +81,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
                 <option value="">全部状态</option>
                 <option value="unused">未使用</option>
                 <option value="used">已使</option>
-                <option value="revoked">已撤</option>
+                <option value="revoked">已撤销</option>
             </select>
             <input type="text" id="searchInput" placeholder="搜索VIP码或手机号" style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
             <button onclick="loadCodes(1)">🔍 搜索</button>
@@ -131,7 +131,7 @@ function renderTable(data) {
     let rows = '';
     data.items.forEach(r => {
         const badge = r.status==='unused'?'badge-unused':r.status==='used'?'badge-used':'badge-revoked';
-        const label = r.status==='unused'?'未使用:r.status==='used'?'已使:'已撤';
+        const label = r.status==='unused'?'未使用r.status==='used'?'已使用'已撤销';
         const action = (r.status==='unused' || r.status==='assigned')
             ? `<button class="btn-danger" style="padding:4px 10px;font-size:12px" onclick="revokeCode('${r.vip_code}')">撤销</button>`
             : '-';
@@ -145,7 +145,7 @@ function renderTable(data) {
             <td>${action}</td>
         </tr>`;
     });
-    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状</th><th>VIP码</th><th>使用</th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table>`;
+    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状态</th><th>VIP码</th><th>使用</th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function renderPagination(total, perPage, page) {

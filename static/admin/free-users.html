@@ -88,7 +88,7 @@ async function loadUsers(page) {
                 <td>${r.upgraded_at||'-'}</td>
             </tr>`;
         });
-        document.getElementById('userTable').innerHTML = `<table><thead><tr><th>手机</th><th>激活码</th><th>等级</th><th>婵€激活时间</th><th>到期</th><th>状态</th><th>升级时间</th></tr></thead><tbody>${rows}</tbody></table>`;
+        document.getElementById('userTable').innerHTML = `<table><thead><tr><th>手机</th><th>激活码</th><th>等级</th><th>激活时间</th><th>到期</th><th>状态</th><th>升级时间</th></tr></thead><tbody>${rows}</tbody></table>`;
         
         const pages = Math.ceil(data.total / data.per_page);
         if (pages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
