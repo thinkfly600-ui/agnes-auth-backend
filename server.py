@@ -9,6 +9,12 @@ from auth import login_required, try_login, SECRET_KEY
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 app.secret_key = SECRET_KEY
 
+@app.after_request
+def add_charset(response):
+    if response.content_type and 'text/' in response.content_type and 'charset' not in response.content_type:
+        response.headers['Content-Type'] = response.content_type + '; charset=utf-8'
+    return response
+
 @app.route("/api/get-code", methods=["POST"])
 def api_get_code():
     data = request.get_json(force=True)
