@@ -69,8 +69,8 @@ async function load() {
         if (resp.status===302||resp.redirected) { window.location.href='/admin'; return; }
         const s = await resp.json();
         document.getElementById('stats').innerHTML = `
-            <div class="stat-card"><div class="label">总免费用户</div><div class="value">${s.total_free}</div><div class="sub">本周新增 +${s.week_free}</div></div>
-            <div class="stat-card"><div class="label">总VIP用户</div><div class="value">${s.total_vip}</div><div class="sub">本周新增 +${s.week_vip}</div></div>
+            <div class="stat-card"><div class="label">总免费用户</div><div class="value">${s.total_free}</div><div class="sub">本周新增 +${s.week_free}</div></div>
+            <div class="stat-card"><div class="label">总VIP用户</div><div class="value">${s.total_vip}</div><div class="sub">本周新增 +${s.week_vip}</div></div>
             <div class="stat-card"><div class="label">未使用VIP码</div><div class="value">${s.vip_unused}</div><div class="sub">已使${s.vip_used}</div></div>
             <div class="stat-card"><div class="label">到期预警</div><div class="value">${s.soon_expire}</div><div class="sub">已过${s.expired}</div></div>`;
         

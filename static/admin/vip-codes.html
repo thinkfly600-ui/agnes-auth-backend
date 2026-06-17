@@ -56,7 +56,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
 <nav>
     <h2>猸?VIP码管理</h2>
     <div class="links">
-        <a href="/admin/dashboard">浠〃鐩?</a>
+        <a href="/admin/dashboard">仪表盘</a>
         <a href="/admin/vip-codes" class="active">VIP码管理</a>
         <a href="/admin/free-users">免费用户</a>
     </div>
@@ -64,13 +64,13 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
 </nav>
 <div class="container">
     <div class="card">
-        <h3>🔑 批量生成VIP鐮?</h3>
+        <h3>🔑 批量生成VIP码</h3>
         <div class="toolbar">
             <input type="number" id="genCount" value="10" min="1" max="500" style="width:80px">
-            <button class="btn-primary" onclick="generateCodes()">生成VIP鐮?</button>
+            <button class="btn-primary" onclick="generateCodes()">生成VIP码</button>
             <input type="text" id="genNote" placeholder="备注（管理月活动批次）" style="width:200px">
-            <button class="btn-outline" onclick="exportCSV()">馃摜 导出CSV</button>
-            <button class="btn-outline" onclick="backupDB()">馃捑 备份数据库</button>
+            <button class="btn-outline" onclick="exportCSV()">📥 导出CSV</button>
+            <button class="btn-outline" onclick="backupDB()">💾 备份数据库</button>
         </div>
     </div>
 
@@ -84,7 +84,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
                 <option value="revoked">已撤</option>
             </select>
             <input type="text" id="searchInput" placeholder="搜索VIP码或手机号" style="width:220px" onkeydown="if(event.key==='Enter')loadCodes(1)">
-            <button onclick="loadCodes(1)">馃攳 搜索</button>
+            <button onclick="loadCodes(1)">🔍 搜索</button>
         </div>
         <div id="codeTable"><div class="spinner"></div></div>
         <div class="pagination" id="pagination"></div>
@@ -96,7 +96,7 @@ td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 13px; colo
         <h3>鉁?生成结果</h3>
         <div id="genResult" style="max-height:400px;overflow-y:auto;font-family:monospace;font-size:13px;line-height:2;"></div>
         <div class="modal-btns">
-            <button class="btn-outline" onclick="copyGenResult()">📅 涓€閿鍒?</button>
+            <button class="btn-outline" onclick="copyGenResult()">📅 导出CSV</button>
             <button class="btn-primary" onclick="document.getElementById('genModal').classList.remove('show');loadCodes(1)">关闭</button>
         </div>
     </div>
@@ -145,7 +145,7 @@ function renderTable(data) {
             <td>${action}</td>
         </tr>`;
     });
-    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状?</th><th>VIP鐮?</th><th>使用</th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table>`;
+    document.getElementById('codeTable').innerHTML = `<table><thead><tr><th>状?</th><th>VIP码</th><th>使用</th><th>生成时间</th><th>使用时间</th><th>备注</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function renderPagination(total, perPage, page) {
@@ -175,7 +175,7 @@ async function generateCodes() {
 }
 
 async function revokeCode(vipCode) {
-    if (!confirm('纭撤销VIP码IP码？撤销后无法恢复?)) return;
+    if (!confirm('确认撤销VIP码IP码？撤销后无法恢复?)) return;
     try {
         const resp = await fetch('/admin/api/vip-revoke', {
             method: 'POST', headers: {'Content-Type':'application/json'},
